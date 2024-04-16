@@ -41,41 +41,56 @@ function playRound(playerChoice, computerChoice)
     computerChoice = computerChoice.toLowerCase();
 
     if(playerChoice == computerChoice)
-        return "Tie";
+        return "0";
     else if(roundResult(playerChoice, computerChoice) == true)
-        return "You Won!";
+        return "1";
     else
-        return "You Lost!";
+        return "-1";
 }
+
+let play = document.querySelector("#start");
+
+play.addEventListener('click', function() {
+    let textBox = document.querySelector("#message");
+    let resultLog = document.querySelector("#output");
+
+    resultLog.innerText = "Press R for Rock, S for Scissors or P for Paper!";
+    textBox.value = "";
+    playGame();
+    textBox.focus();
+});
 
 function playGame()
 {
-    let playerChoice;
-    let computerChoice;
 
     let res;
-    let human = 0,
-        bot = 0;
+    
+    let playerChoice = document.querySelector("#message"); 
+    let computerChoice = getComputerChoice();
 
-    for(i = 0; i < 5; ++i)
-    {
-        playerChoice = prompt("Enter The Choice : ");
-        computerChoice = getComputerChoice();
+    playerChoice.addEventListener('keyup', (event) => {        
+        let key = null;
 
-        res = playRound(playerChoice, computerChoice);
+        if(event.key == 'r' || event.key == 'R')   
+            key = `rock`;
+        else if(event.key == 'p' || event.key == 'P')
+            key = `paper`;
+        else if(event.key == 's' || event.key == 'S')
+            key = `scissors`;        
 
-        if(res == "You Won!")
-            human++;
-        else if(res == "You Lost!")
-            bot++;
-    }
+        if(key)
+        {
+            let out = playRound(key, computerChoice);
 
-    if(human > bot)
-        return "You Won the Match!";
-    else if(bot > human)
-        return "You Lost the Match!";
-    else    
-        return "Match Tie!";
+            if(out == '0')
+                res = `Tie!`;
+            else if(out == '1')
+                res = `You Won!`;
+            else 
+                res = `You Lost!`;
+            
+            let log = document.querySelector("#output");
+            log.innerText = res;
+        }
+    });
 }
-
-console.log(playGame());
